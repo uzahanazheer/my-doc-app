@@ -18,6 +18,28 @@ if not LOGO_BASE64:
 else:
     LOGO_SRC = LOGO_BASE64
 
+# --- ฐานข้อมูลลูกค้าสำรอง (ตัวอย่าง) ---
+CUSTOMER_DB = {
+    "กรอกข้อมูลเอง (Custom)": {
+        "code": "",
+        "name": "",
+        "address": "",
+        "taxid": ""
+    },
+    "CUST-001 | บริษัท ตัวอย่าง จำกัด": {
+        "code": "CUST-001",
+        "name": "บริษัท ตัวอย่าง จำกัด",
+        "address": "123/45 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",
+        "taxid": "0105551234567"
+    },
+    "CUST-002 | บริษัท โลจิสติกส์ ไทย จำกัด": {
+        "code": "CUST-002",
+        "name": "บริษัท โลจิสติกส์ ไทย จำกัด",
+        "address": "88/9 หมู่ 2 ต.บางกรวด อ.เมือง จ.ปทุมธานี 12000",
+        "taxid": "0135599887766"
+    }
+}
+
 col_form, col_preview = st.columns([1, 1.2])
 
 with col_form:
@@ -27,13 +49,17 @@ with col_form:
     receipt_date = st.text_input("วันที่", "12/03/2026")
     receipt_no = st.text_input("เลขที่ใบเสร็จ", "REC2026/03-001")
     
-    st.subheader("ข้อมูลลูกค้า")
-    customer_code = st.text_input("รหัสลูกค้า", "CUST-001")
-    cust_name = st.text_input("ชื่อลูกค้า", "บริษัท ตัวอย่าง จำกัด")
-    cust_address = st.text_area("ที่อยู่ลูกค้า", "123/45 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110")
-    cust_taxid = st.text_input("เลขผู้เสียภาษี", "0105551234567")
+    st.subheader("👤 ข้อมูลลูกค้า")
+    # ดึงฐานข้อมูลลูกค้ากลับมาให้เลือกตรงนี้ครับ
+    selected_cust = st.selectbox("เลือกจากฐานข้อมูลลูกค้า", list(CUSTOMER_DB.keys()))
+    cust_data = CUSTOMER_DB[selected_cust]
     
-    st.subheader("ข้อมูลการขนส่ง / รายการ")
+    customer_code = st.text_input("รหัสลูกค้า", value=cust_data["code"] if cust_data["code"] else "CUST-001")
+    cust_name = st.text_input("ชื่อลูกค้า", value=cust_data["name"] if cust_data["name"] else "บริษัท ตัวอย่าง จำกัด")
+    cust_address = st.text_area("ที่อยู่ลูกค้า", value=cust_data["address"] if cust_data["address"] else "123/45 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110")
+    cust_taxid = st.text_input("เลขผู้เสียภาษี", value=cust_data["taxid"] if cust_data["taxid"] else "0105551234567")
+    
+    st.subheader("🚛 ข้อมูลการขนส่ง / รายการ")
     payment_term = st.text_input("เงื่อนไขการชำระเงิน", "เงินสด / โอน")
     driver_name = st.text_input("พนักงานขนส่ง", "นายสมชาย ใจดี")
     
@@ -42,7 +68,7 @@ with col_form:
     item_unit = st.text_input("หน่วย", "เที่ยว")
     item_price = st.number_input("ราคาต่อหน่วย", min_value=0.0, value=5000.0, step=100.0)
     
-    st.subheader("วิธีการชำระเงิน")
+    st.subheader("💳 วิธีการชำระเงิน")
     pay_method = st.radio("เลือกวิธีชำระเงิน", ["เงินสด", "เงินโอน", "เช็ค"])
     
     total_amount = item_qty * item_price
@@ -80,7 +106,6 @@ with col_preview:
             flex-direction: column;
             align-items: center;
         }}
-        /* กำหนดขนาดตามสัดส่วน A4 แบบพิกเซลมาตรฐาน (210mm x 297mm) */
         .receipt-box {{
             border: 1.5px solid #000;
             padding: 24px 28px;
@@ -134,7 +159,6 @@ with col_preview:
         <div>
             <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 8px;"><u>{doc_type}</u></div>
 
-            <!-- Header Layout -->
             <table style="margin-bottom: 12px;">
                 <tr>
                     <td style="width: 28%; vertical-align: middle; padding-right: 12px;">
@@ -147,7 +171,6 @@ with col_preview:
                 </tr>
             </table>
 
-            <!-- ที่อยู่บริษัท -->
             <div style="font-size: 12px; line-height: 1.5; margin-bottom: 12px;">
                 <div>สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
                 <div>Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
@@ -177,7 +200,6 @@ with col_preview:
                 <div><b>เลขประจำตัวผู้เสียภาษี :</b> {cust_taxid}</div>
             </div>
 
-            <!-- ตารางรายการขยายความสูงให้เต็มสัดส่วน A4 -->
             <table class="border-table" style="border-top: none;">
                 <thead>
                     <tr style="text-align: center; background-color: #fdfdfd;">
@@ -216,7 +238,6 @@ with col_preview:
             </table>
         </div>
 
-        <!-- ส่วนท้ายเอกสาร -->
         <div>
             <div style="margin-top: 15px; font-size: 13px; line-height: 2.0;">
                 <div><b>ชำระโดย :</b></div>
