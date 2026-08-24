@@ -98,201 +98,7 @@ with tab_form:
             })
             st.success("บันทึกข้อมูลเรียบร้อยแล้ว!")
 
-    with col_preview:with col_preview:
-    st.subheader("👁️ ตัวอย่างก่อนพิมพ์ (Fit A4 View)")
-    
-    full_html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        @page {{
-            size: A4 portrait;
-            margin: 0;
-        }}
-        * {{ box-sizing: border-box; }}
-        body {{
-            font-family: 'Sarabun', sans-serif;
-            color: #000;
-            margin: 0;
-            padding: 0;
-            background-color: transparent;
-        }}
-        .preview-wrapper {{
-            transform: scale(0.68);
-            transform-origin: top left;
-            width: 147%;
-            height: 1100px;
-        }}
-        .receipt-box {{
-            border: 1.5px solid #000;
-            padding: 28px 32px;
-            font-size: 12.5px;
-            line-height: 1.35;
-            width: 794px;
-            height: 1060px;
-            background-color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin: 0 auto;
-        }}
-        table {{ width: 100%; border-collapse: collapse; }}
-        .border-table, .border-table th, .border-table td {{ border: 1px solid #000; }}
-        .btn-print {{
-            margin-top: 15px;
-            width: 794px;
-            background-color: #059669;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 18px;
-            font-family: 'Sarabun', sans-serif;
-        }}
-        @media print {{
-            .preview-wrapper {{ transform: none; width: 100%; height: auto; }}
-            body {{ background: none; }}
-            .btn-print {{ display: none !important; }}
-            .receipt-box {{
-                border: 1.5px solid #000;
-                width: 100%;
-                height: 98vh;
-                padding: 25px 30px;
-                box-shadow: none;
-                page-break-after: avoid;
-                page-break-inside: avoid;
-            }}
-        }}
-    </style>
-    </head>
-    <body>
-
-    <div class="preview-wrapper">
-        <div class="receipt-box">
-            <div>
-                <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 4px;"><u>{doc_type}</u></div>
-
-                <table style="margin-bottom: 8px;">
-                    <tr>
-                        <td style="width: 35%; vertical-align: middle; padding-right: 10px;">
-                            <img src="{LOGO_SRC}" style="width: 100%; max-height: 110px; object-fit: contain; display: block;">
-                        </td>
-                        <td style="width: 65%; vertical-align: middle; padding-left: 5px;">
-                            <div style="font-size: 22px; font-weight: bold; line-height: 1.2;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
-                            <div style="font-size: 17px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
-                        </td>
-                    </tr>
-                </table>
-
-                <div style="font-size: 11px; line-height: 1.4; margin-bottom: 8px;">
-                    <div>สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
-                    <div>Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
-                    <div>Tel. 0-2975-3103 fax. 0-2975-3103 เลขประจำตัวผู้เสียภาษี 0135566024644</div>
-                </div>
-
-                <div style="text-align: right; font-size: 12.5px; margin-bottom: 4px;"><b>วันที่ / Date :</b> {receipt_date}</div>
-
-                <table class="border-table" style="text-align: center;">
-                    <tr>
-                        <td style="width: 20%; padding: 4px;">รหัสลูกค้า<br><span style="font-size: 10px;">Customer Code</span></td>
-                        <td style="width: 40%; padding: 4px;">เงื่อนไขการชำระเงิน<br><span style="font-size: 10px;">Terms of Payment</span></td>
-                        <td style="width: 20%; padding: 4px;">พนักงานขนส่ง</td>
-                        <td style="width: 20%; padding: 4px;">เลขที่ใบเสร็จรับเงิน<br><span style="font-size: 10px;">Receipt No.</span></td>
-                    </tr>
-                    <tr style="height: 28px;">
-                        <td>{customer_code}</td>
-                        <td>{payment_term}</td>
-                        <td>{driver_name}</td>
-                        <td style="font-weight: bold;">{receipt_no}</td>
-                    </tr>
-                </table>
-
-                <div style="border: 1px solid #000; border-top: none; padding: 6px 10px; font-size: 12px; line-height: 1.5;">
-                    <div><b>ชื่อลูกค้า :</b> {cust_name}</div>
-                    <div><b>ที่อยู่ :</b> {cust_address}</div>
-                    <div><b>เลขประจำตัวผู้เสียภาษี :</b> {cust_taxid}</div>
-                </div>
-
-                <table class="border-table" style="border-top: none;">
-                    <thead>
-                        <tr style="text-align: center; background-color: #fdfdfd;">
-                            <th style="width: 8%; padding: 5px;">ลำดับที่</th>
-                            <th style="width: 42%; padding: 5px;">รายการ</th>
-                            <th style="width: 10%; padding: 5px;">จำนวน</th>
-                            <th style="width: 10%; padding: 5px;">หน่วย</th>
-                            <th style="width: 15%; padding: 5px;">ราคา/หน่วย</th>
-                            <th style="width: 15%; padding: 5px;">จำนวนเงิน</th>
-                        </tr>
-                    </thead>
-                    <!-- แก้ไขเพิ่มจำนวนแถวในส่วนนี้แล้ว -->
-                    <tbody>
-                        <tr style="height: 30px; text-align: center;">
-                            <td>1</td>
-                            <td style="padding: 2px 8px; text-align: left;">{item_desc}</td>
-                            <td>{item_qty}</td>
-                            <td>{item_unit}</td>
-                            <td style="padding: 2px 8px; text-align: right;">{formatted_price}</td>
-                            <td style="padding: 2px 8px; text-align: right;">{formatted_amount}</td>
-                        </tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr style="font-weight: bold;">
-                            <td colspan="3" style="padding: 6px 8px; text-align: left;">{text_baht}</td>
-                            <td colspan="2" style="padding: 6px; text-align: center;">ยอดสุทธิ</td>
-                            <td style="padding: 6px 8px; text-align: right;">{formatted_amount}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div>
-                <div style="margin-top: 10px; font-size: 12px; line-height: 1.8;">
-                    <div><b>ชำระโดย :</b></div>
-                    <div>{chk_cash} เงินสด ................................................................................................................บาท</div>
-                    <div>{chk_transfer} เงินโอน ................................................................................................................บาท</div>
-                    <div>{chk_cheque} เช็ค &nbsp; ธนาคาร........................................สาขา...........................................................................................</div>
-                </div>
-
-                <table class="border-table" style="margin-top: 12px; text-align: center; font-size: 11.5px;">
-                    <tr>
-                        <td style="width: 33%; padding: 8px 4px; vertical-align: top;">
-                            <div>ผู้รับเงิน</div><br><br>
-                            <div>วันที่................................................</div>
-                        </td>
-                        <td style="width: 33%; padding: 8px 4px; vertical-align: top;">
-                            <div>ผู้รับใบเสร็จ</div><br><br>
-                            <div>วันที่................................................</div>
-                        </td>
-                        <td style="width: 34%; padding: 8px 4px; vertical-align: top;">
-                            <div>ในนามบริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div><br><br>
-                            <div>ประทับตราบริษัท</div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <button class="btn-print" onclick="window.print()">🖨️ พิมพ์ใบเสร็จรับเงิน / Save PDF (A4)</button>
-    </div>
-
-    </body>
-    </html>
-    """
-    components.html(full_html, height=780, scrolling=False)
+    with col_preview:
         st.subheader("👁️ ตัวอย่างก่อนพิมพ์ (Fit A4 View)")
         
         full_html = f"""
@@ -314,7 +120,6 @@ with tab_form:
                 padding: 0;
                 background-color: transparent;
             }}
-            /* สเกลภาพพรีวิวลงเพื่อให้เห็นเต็มหน้าโดยไม่ต้องเลื่อน */
             .preview-wrapper {{
                 transform: scale(0.68);
                 transform-origin: top left;
@@ -327,7 +132,7 @@ with tab_form:
                 font-size: 12.5px;
                 line-height: 1.35;
                 width: 794px;
-                height: 1060px; /* คุมความสูงพอดี 1 หน้า A4 ไม่ให้ล้นแผ่นที่ 2 */
+                height: 1060px;
                 background-color: #fff;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 display: flex;
@@ -373,7 +178,6 @@ with tab_form:
                 <div>
                     <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 4px;"><u>{doc_type}</u></div>
 
-                    <!-- ขยายโลโก้ให้ใหญ่ขึ้น -->
                     <table style="margin-bottom: 8px;">
                         <tr>
                             <td style="width: 35%; vertical-align: middle; padding-right: 10px;">
@@ -435,12 +239,17 @@ with tab_form:
                                 <td style="padding: 2px 8px; text-align: right;">{formatted_price}</td>
                                 <td style="padding: 2px 8px; text-align: right;">{formatted_amount}</td>
                             </tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 30px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                             <tr style="font-weight: bold;">
                                 <td colspan="3" style="padding: 6px 8px; text-align: left;">{text_baht}</td>
                                 <td colspan="2" style="padding: 6px; text-align: center;">ยอดสุทธิ</td>
