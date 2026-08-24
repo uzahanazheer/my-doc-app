@@ -25,8 +25,19 @@ with col_input:
 
     with st.expander("3. รายการสินค้า / บริการ", expanded=True):
         item_desc = st.text_input("รายการ (Description)", "ค่าขนส่งสินค้า")
-        item_qty = st.number_input("จำนวน (Quantity)", min_value=1, value=2)
-        item_amount = st.number_input("จำนวนเงิน (Amount)", min_value=0.0, value=8400.00, step=100.0)
+        
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            item_qty = st.number_input("จำนวน (Qty)", min_value=1, value=2)
+        with c2:
+            item_unit = st.text_input("หน่วย (Unit)", "เที่ยว")
+        with c3:
+            item_price = st.number_input("ราคา/หน่วย (Price/Unit)", min_value=0.0, value=4200.00, step=100.0)
+            
+        # คำนวณจำนวนเงินให้อัตโนมัติ
+        item_amount = item_qty * item_price
+        st.info(f"💰 จำนวนเงินรวม: **{item_amount:,.2f}** บาท")
+        
         text_baht = st.text_input("จำนวนเงินตัวอักษร", "แปดพันสี่ร้อยบาทถ้วน")
 
     with st.expander("4. การชำระเงิน", expanded=False):
@@ -35,9 +46,10 @@ with col_input:
 chk_cash = "[ ✓ ]" if pay_type == "เงินสด" else "[ &nbsp; ]"
 chk_transfer = "[ ✓ ]" if pay_type == "เงินโอน" else "[ &nbsp; ]"
 chk_cheque = "[ ✓ ]" if pay_type == "เช็ค" else "[ &nbsp; ]"
+formatted_price = f"{item_price:,.2f}"
 formatted_amount = f"{item_amount:,.2f}"
 
-# HTML Template สำหรับแสดงผลและสั่งพิมพ์
+# HTML Template
 full_html = f"""
 <!DOCTYPE html>
 <html>
@@ -130,13 +142,16 @@ full_html = f"""
         <div><b>เลขประจำตัวผู้เสียภาษี :</b> {cust_taxid}</div>
     </div>
 
+    <!-- Items Table with Unit & Price/Unit -->
     <table class="border-table" style="border-top: none;">
         <thead>
             <tr style="text-align: center;">
-                <th style="width: 12%; padding: 4px;">ลำดับที่<br><span style="font-size: 11px; font-weight: normal;">Item</span></th>
-                <th style="width: 53%; padding: 4px;">รายการ<br><span style="font-size: 11px; font-weight: normal;">Description</span></th>
-                <th style="width: 15%; padding: 4px;">จำนวน<br><span style="font-size: 11px; font-weight: normal;">Quantity</span></th>
-                <th style="width: 20%; padding: 4px;">จำนวนเงิน<br><span style="font-size: 11px; font-weight: normal;">Amount</span></th>
+                <th style="width: 8%; padding: 4px;">ลำดับที่<br><span style="font-size: 10px; font-weight: normal;">Item</span></th>
+                <th style="width: 42%; padding: 4px;">รายการ<br><span style="font-size: 10px; font-weight: normal;">Description</span></th>
+                <th style="width: 10%; padding: 4px;">จำนวน<br><span style="font-size: 10px; font-weight: normal;">Quantity</span></th>
+                <th style="width: 10%; padding: 4px;">หน่วย<br><span style="font-size: 10px; font-weight: normal;">Unit</span></th>
+                <th style="width: 15%; padding: 4px;">ราคา/หน่วย<br><span style="font-size: 10px; font-weight: normal;">Price/Unit</span></th>
+                <th style="width: 15%; padding: 4px;">จำนวนเงิน<br><span style="font-size: 10px; font-weight: normal;">Amount</span></th>
             </tr>
         </thead>
         <tbody>
@@ -144,16 +159,18 @@ full_html = f"""
                 <td>1</td>
                 <td style="padding: 2px 8px; text-align: left;">{item_desc}</td>
                 <td>{item_qty}</td>
+                <td>{item_unit}</td>
+                <td style="padding: 2px 8px; text-align: right;">{formatted_price}</td>
                 <td style="padding: 2px 8px; text-align: right;">{formatted_amount}</td>
             </tr>
-            <tr style="height: 22px;"><td></td><td></td><td></td><td></td></tr>
-            <tr style="height: 22px;"><td></td><td></td><td></td><td></td></tr>
-            <tr style="height: 22px;"><td></td><td></td><td></td><td></td></tr>
-            <tr style="height: 22px;"><td></td><td></td><td></td><td></td></tr>
-            <tr style="height: 22px;"><td></td><td></td><td></td><td></td></tr>
+            <tr style="height: 22px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="height: 22px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="height: 22px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="height: 22px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="height: 22px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
             <tr style="font-weight: bold;">
-                <td colspan="2" style="padding: 4px 8px; text-align: left;">{text_baht}</td>
-                <td style="padding: 4px; text-align: center;">ยอดสุทธิ</td>
+                <td colspan="3" style="padding: 4px 8px; text-align: left;">{text_baht}</td>
+                <td colspan="2" style="padding: 4px; text-align: center;">ยอดสุทธิ</td>
                 <td style="padding: 4px 8px; text-align: right;">{formatted_amount}</td>
             </tr>
         </tbody>
