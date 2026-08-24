@@ -5,7 +5,6 @@ import os
 
 st.set_page_config(page_title="ระบบออกใบเสร็จรับเงิน", page_icon="🧾", layout="wide")
 
-# ฟังก์ชันอ่านไฟล์รูปภาพแล้วแปลงเป็น Base64 อัตโนมัติ
 def get_image_base64(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as img_file:
@@ -13,21 +12,18 @@ def get_image_base64(image_path):
             return f"data:image/png;base64,{encoded}"
     return ""
 
-# ดึงรูปจากไฟล์ logo.png (หากไม่มีไฟล์จะแสดงภาพสำรองชั่วคราว)
 LOGO_BASE64 = get_image_base64("logo.png")
 if not LOGO_BASE64:
-    # URL ภาพสำรองกรณีที่ยังไม่ได้ใส่ไฟล์ logo.png ในโฟลเดอร์
     LOGO_SRC = "https://via.placeholder.com/220x80.png?text=A%26K+Transport+Logo"
 else:
     LOGO_SRC = LOGO_BASE64
 
-# --- ฝั่งป้อนข้อมูล (UI Controls) ---
 col_form, col_preview = st.columns([1, 1.2])
 
 with col_form:
     st.header("📝 กรอกข้อมูลใบเสร็จ")
     
-    doc_type = st.selectbox("ชนิดเอกสาร", ["ใบเสร็จรับเงิน (RECEIPT)", "ใบเสร็จรับเงิน/ใบกำกับภาษี"])
+    doc_type = st.selectbox("ชนิดเอกสาร", ["ต้นฉบับใบเสร็จรับเงิน", "สำเนาใบเสร็จรับเงิน", "ใบเสร็จรับเงิน/ใบกำกับภาษี"])
     receipt_date = st.text_input("วันที่", "12/03/2026")
     receipt_no = st.text_input("เลขที่ใบเสร็จ", "REC2026/03-001")
     
@@ -59,7 +55,6 @@ with col_form:
     
     text_baht = "บาทข้อความ: (ห้าพันบาทถ้วน)"
 
-# --- ฝั่งแสดงผล (Preview) ---
 with col_preview:
     st.subheader("👁️ ตัวอย่างใบเสร็จรับเงิน")
     
@@ -98,6 +93,13 @@ with col_preview:
         .border-table, .border-table th, .border-table td {{
             border: 1px solid #000;
         }}
+        .logo-box {{
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+        }}
         .btn-print {{
             margin-top: 15px;
             width: 100%;
@@ -125,22 +127,31 @@ with col_preview:
     <body>
 
     <div class="receipt-box">
-        <div style="text-align: right; font-size: 13px; font-weight: bold; margin-bottom: 6px;"><u>{doc_type}</u></div>
+        <div style="text-align: right; font-size: 13px; font-weight: bold; margin-bottom: 4px;"><u>{doc_type}</u></div>
 
+        <!-- Header Layout ตามแบบ -->
         <table style="margin-bottom: 8px;">
             <tr>
-                <td style="width: 32%; vertical-align: top;">
-                    <img src="{LOGO_SRC}" style="width: 100%; max-width: 220px; height: auto; display: block;">
+                <td style="width: 32%; vertical-align: top; padding-right: 15px;">
+                    <div class="logo-box">
+                        <img src="{LOGO_SRC}" style="width: 100%; max-height: 55px; object-fit: contain; display: block; margin: 0 auto;">
+                        <div style="font-size: 10px; font-weight: bold; margin-top: 4px; line-height: 1.2;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
+                        <div style="font-size: 9px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
+                    </div>
                 </td>
-                <td style="width: 68%; padding-left: 15px; vertical-align: top;">
-                    <div style="font-size: 16px; font-weight: bold;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
-                    <div style="font-size: 15px; font-weight: bold; margin-bottom: 4px;">A & K TRANSPORT CO.,LTD.</div>
-                    <div style="font-size: 11px;">สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
-                    <div style="font-size: 11px;">Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
-                    <div style="font-size: 11px;">Tel. 0-2975-3103 fax. 0-2975-3103 เลขประจำตัวผู้เสียภาษี 0135566024644</div>
+                <td style="width: 68%; vertical-align: middle;">
+                    <div style="font-size: 18px; font-weight: bold; line-height: 1.2; margin-bottom: 4px;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
+                    <div style="font-size: 16px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
                 </td>
             </tr>
         </table>
+
+        <!-- ที่อยู่บริษัท -->
+        <div style="font-size: 11px; line-height: 1.4; margin-bottom: 8px;">
+            <div>สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
+            <div>Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
+            <div>Tel. 0-2975-3103 fax. 0-2975-3103 เลขประจำตัวผู้เสียภาษี 0135566024644</div>
+        </div>
 
         <div style="text-align: right; font-size: 12px; margin-bottom: 4px;"><b>วันที่ / Date :</b> {receipt_date}</div>
 
