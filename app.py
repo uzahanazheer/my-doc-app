@@ -93,13 +93,6 @@ with col_preview:
         .border-table, .border-table th, .border-table td {{
             border: 1px solid #000;
         }}
-        .logo-box {{
-            border: 1px solid #000;
-            padding: 6px;
-            text-align: center;
-            display: inline-block;
-            width: 100%;
-        }}
         .btn-print {{
             margin-top: 15px;
             width: 100%;
@@ -129,19 +122,15 @@ with col_preview:
     <div class="receipt-box">
         <div style="text-align: right; font-size: 13px; font-weight: bold; margin-bottom: 4px;"><u>{doc_type}</u></div>
 
-        <!-- Header Layout ตามแบบ -->
+        <!-- Header Layout ปรับใหม่ (เอาสี่เหลี่ยมด้านนอกออก + ตัวหนังสือ 3 บรรทัดล่างออก) -->
         <table style="margin-bottom: 8px;">
             <tr>
-                <td style="width: 32%; vertical-align: top; padding-right: 15px;">
-                    <div class="logo-box">
-                        <img src="{LOGO_SRC}" style="width: 100%; max-height: 55px; object-fit: contain; display: block; margin: 0 auto;">
-                        <div style="font-size: 10px; font-weight: bold; margin-top: 4px; line-height: 1.2;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
-                        <div style="font-size: 9px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
-                    </div>
+                <td style="width: 28%; vertical-align: middle; padding-right: 10px;">
+                    <img src="{LOGO_SRC}" style="width: 100%; max-height: 75px; object-fit: contain; display: block;">
                 </td>
-                <td style="width: 68%; vertical-align: middle;">
-                    <div style="font-size: 18px; font-weight: bold; line-height: 1.2; margin-bottom: 4px;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
-                    <div style="font-size: 16px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
+                <td style="width: 72%; vertical-align: middle; padding-left: 10px;">
+                    <div style="font-size: 20px; font-weight: bold; line-height: 1.2; margin-bottom: 2px;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
+                    <div style="font-size: 17px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
                 </td>
             </tr>
         </table>
