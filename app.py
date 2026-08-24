@@ -56,7 +56,7 @@ with col_form:
     text_baht = "บาทข้อความ: (ห้าพันบาทถ้วน)"
 
 with col_preview:
-    st.subheader("👁️ ตัวอย่างใบเสร็จรับเงิน")
+    st.subheader("👁️ ตัวอย่างใบเสร็จรับเงิน (A4 Ratio)")
     
     full_html = f"""
     <!DOCTYPE html>
@@ -67,24 +67,32 @@ with col_preview:
     <style>
         @page {{
             size: A4 portrait;
-            margin: 10mm;
+            margin: 0;
         }}
         * {{ box-sizing: border-box; }}
         body {{
             font-family: 'Sarabun', sans-serif;
             color: #000;
             margin: 0;
-            padding: 5px;
-            background-color: #fff;
+            padding: 10px 0;
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }}
+        /* กำหนดขนาดตามสัดส่วน A4 แบบพิกเซลมาตรฐาน (210mm x 297mm) */
         .receipt-box {{
             border: 1.5px solid #000;
-            padding: 15px;
+            padding: 24px 28px;
             font-size: 13px;
-            line-height: 1.35;
-            width: 100%;
-            max-width: 780px;
-            margin: 0 auto;
+            line-height: 1.4;
+            width: 794px;
+            height: 1123px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }}
         table {{
             width: 100%;
@@ -94,139 +102,151 @@ with col_preview:
             border: 1px solid #000;
         }}
         .btn-print {{
-            margin-top: 15px;
-            width: 100%;
-            max-width: 780px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 20px;
+            width: 794px;
             background-color: #059669;
             color: white;
             border: none;
-            padding: 12px;
+            padding: 14px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             font-size: 16px;
             font-family: 'Sarabun', sans-serif;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }}
         @media print {{
-            .btn-print {{ display: none !important; }}
             body {{ padding: 0; background: none; }}
-            .receipt-box {{ border: 1.5px solid #000; max-width: 100%; }}
+            .btn-print {{ display: none !important; }}
+            .receipt-box {{
+                border: 1.5px solid #000;
+                width: 100%;
+                height: 100vh;
+                box-shadow: none;
+                page-break-after: always;
+            }}
         }}
     </style>
     </head>
     <body>
 
     <div class="receipt-box">
-        <div style="text-align: right; font-size: 13px; font-weight: bold; margin-bottom: 4px;"><u>{doc_type}</u></div>
+        <div>
+            <div style="text-align: right; font-size: 14px; font-weight: bold; margin-bottom: 8px;"><u>{doc_type}</u></div>
 
-        <!-- Header Layout ปรับใหม่ (เอาสี่เหลี่ยมด้านนอกออก + ตัวหนังสือ 3 บรรทัดล่างออก) -->
-        <table style="margin-bottom: 8px;">
-            <tr>
-                <td style="width: 28%; vertical-align: middle; padding-right: 10px;">
-                    <img src="{LOGO_SRC}" style="width: 100%; max-height: 75px; object-fit: contain; display: block;">
-                </td>
-                <td style="width: 72%; vertical-align: middle; padding-left: 10px;">
-                    <div style="font-size: 20px; font-weight: bold; line-height: 1.2; margin-bottom: 2px;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
-                    <div style="font-size: 17px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
-                </td>
-            </tr>
-        </table>
+            <!-- Header Layout -->
+            <table style="margin-bottom: 12px;">
+                <tr>
+                    <td style="width: 28%; vertical-align: middle; padding-right: 12px;">
+                        <img src="{LOGO_SRC}" style="width: 100%; max-height: 80px; object-fit: contain; display: block;">
+                    </td>
+                    <td style="width: 72%; vertical-align: middle; padding-left: 10px;">
+                        <div style="font-size: 22px; font-weight: bold; line-height: 1.2; margin-bottom: 2px;">บริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div>
+                        <div style="font-size: 18px; font-weight: bold; line-height: 1.2;">A & K TRANSPORT CO.,LTD.</div>
+                    </td>
+                </tr>
+            </table>
 
-        <!-- ที่อยู่บริษัท -->
-        <div style="font-size: 11px; line-height: 1.4; margin-bottom: 8px;">
-            <div>สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
-            <div>Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
-            <div>Tel. 0-2975-3103 fax. 0-2975-3103 เลขประจำตัวผู้เสียภาษี 0135566024644</div>
+            <!-- ที่อยู่บริษัท -->
+            <div style="font-size: 12px; line-height: 1.5; margin-bottom: 12px;">
+                <div>สำนักงานใหญ่ : 48/1 หมู่ที่ 3 ซอยใจเอื้อ ต.บางขะแยง อ.เมืองปทุมธานี จังหวัดปทุมธานี 12000</div>
+                <div>Head Office : 48/1 M00 3, Soi Jaiaoue1 , Bangkayeang, Mangpathumthani, Pathumthani 12000</div>
+                <div>Tel. 0-2975-3103 fax. 0-2975-3103 เลขประจำตัวผู้เสียภาษี 0135566024644</div>
+            </div>
+
+            <div style="text-align: right; font-size: 13px; margin-bottom: 6px;"><b>วันที่ / Date :</b> {receipt_date}</div>
+
+            <table class="border-table" style="text-align: center; margin-bottom: 0px;">
+                <tr>
+                    <td style="width: 20%; padding: 6px;">รหัสลูกค้า<br><span style="font-size: 11px;">Customer Code</span></td>
+                    <td style="width: 40%; padding: 6px;">เงื่อนไขการชำระเงิน<br><span style="font-size: 11px;">Terms of Payment</span></td>
+                    <td style="width: 20%; padding: 6px;">พนักงานขนส่ง</td>
+                    <td style="width: 20%; padding: 6px;">เลขที่ใบเสร็จรับเงิน<br><span style="font-size: 11px;">Receipt No.</span></td>
+                </tr>
+                <tr style="height: 32px;">
+                    <td>{customer_code}</td>
+                    <td>{payment_term}</td>
+                    <td>{driver_name}</td>
+                    <td style="font-weight: bold;">{receipt_no}</td>
+                </tr>
+            </table>
+
+            <div style="border: 1px solid #000; border-top: none; padding: 8px 12px; margin-bottom: 0px; font-size: 13px; line-height: 1.6;">
+                <div><b>ชื่อลูกค้า :</b> {cust_name}</div>
+                <div><b>ที่อยู่ :</b> {cust_address}</div>
+                <div><b>เลขประจำตัวผู้เสียภาษี :</b> {cust_taxid}</div>
+            </div>
+
+            <!-- ตารางรายการขยายความสูงให้เต็มสัดส่วน A4 -->
+            <table class="border-table" style="border-top: none;">
+                <thead>
+                    <tr style="text-align: center; background-color: #fdfdfd;">
+                        <th style="width: 8%; padding: 8px;">ลำดับที่<br><span style="font-size: 10px; font-weight: normal;">Item</span></th>
+                        <th style="width: 42%; padding: 8px;">รายการ<br><span style="font-size: 10px; font-weight: normal;">Description</span></th>
+                        <th style="width: 10%; padding: 8px;">จำนวน<br><span style="font-size: 10px; font-weight: normal;">Qty</span></th>
+                        <th style="width: 10%; padding: 8px;">หน่วย<br><span style="font-size: 10px; font-weight: normal;">Unit</span></th>
+                        <th style="width: 15%; padding: 8px;">ราคา/หน่วย<br><span style="font-size: 10px; font-weight: normal;">Price/Unit</span></th>
+                        <th style="width: 15%; padding: 8px;">จำนวนเงิน<br><span style="font-size: 10px; font-weight: normal;">Amount</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="height: 36px; text-align: center;">
+                        <td>1</td>
+                        <td style="padding: 4px 10px; text-align: left;">{item_desc}</td>
+                        <td>{item_qty}</td>
+                        <td>{item_unit}</td>
+                        <td style="padding: 4px 10px; text-align: right;">{formatted_price}</td>
+                        <td style="padding: 4px 10px; text-align: right;">{formatted_amount}</td>
+                    </tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="height: 34px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="3" style="padding: 8px 10px; text-align: left;">{text_baht}</td>
+                        <td colspan="2" style="padding: 8px; text-align: center;">ยอดสุทธิ</td>
+                        <td style="padding: 8px 10px; text-align: right;">{formatted_amount}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div style="text-align: right; font-size: 12px; margin-bottom: 4px;"><b>วันที่ / Date :</b> {receipt_date}</div>
+        <!-- ส่วนท้ายเอกสาร -->
+        <div>
+            <div style="margin-top: 15px; font-size: 13px; line-height: 2.0;">
+                <div><b>ชำระโดย :</b></div>
+                <div>{chk_cash} เงินสด ................................................................................................................บาท</div>
+                <div>{chk_transfer} เงินโอน ................................................................................................................บาท</div>
+                <div>{chk_cheque} เช็ค &nbsp; ธนาคาร........................................สาขา...........................................................................................</div>
+            </div>
 
-        <table class="border-table" style="text-align: center; margin-bottom: 0px;">
-            <tr>
-                <td style="width: 20%; padding: 4px;">รหัสลูกค้า<br><span style="font-size: 10px;">Customer Code</span></td>
-                <td style="width: 40%; padding: 4px;">เงื่อนไขการชำระเงิน<br><span style="font-size: 10px;">Terms of Payment</span></td>
-                <td style="width: 20%; padding: 4px;">พนักงานขนส่ง</td>
-                <td style="width: 20%; padding: 4px;">เลขที่ใบเสร็จรับเงิน<br><span style="font-size: 10px;">Receipt No.</span></td>
-            </tr>
-            <tr style="height: 28px;">
-                <td>{customer_code}</td>
-                <td>{payment_term}</td>
-                <td>{driver_name}</td>
-                <td style="font-weight: bold;">{receipt_no}</td>
-            </tr>
-        </table>
-
-        <div style="border: 1px solid #000; border-top: none; padding: 6px 10px; margin-bottom: 0px;">
-            <div><b>ชื่อลูกค้า :</b> {cust_name}</div>
-            <div><b>ที่อยู่ :</b> {cust_address}</div>
-            <div><b>เลขประจำตัวผู้เสียภาษี :</b> {cust_taxid}</div>
+            <table class="border-table" style="margin-top: 20px; text-align: center; font-size: 12px;">
+                <tr>
+                    <td style="width: 33%; padding: 12px 8px; vertical-align: top;">
+                        <div>ผู้รับเงิน</div><br><br><br>
+                        <div>วันที่................................................</div>
+                    </td>
+                    <td style="width: 33%; padding: 12px 8px; vertical-align: top;">
+                        <div>ผู้รับใบเสร็จ</div><br><br><br>
+                        <div>วันที่................................................</div>
+                    </td>
+                    <td style="width: 34%; padding: 12px 8px; vertical-align: top;">
+                        <div>ในนามบริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div><br><br><br>
+                        <div>ประทับตราบริษัท</div>
+                    </td>
+                </tr>
+            </table>
         </div>
-
-        <table class="border-table" style="border-top: none;">
-            <thead>
-                <tr style="text-align: center; background-color: #f9f9f9;">
-                    <th style="width: 8%; padding: 5px;">ลำดับที่<br><span style="font-size: 10px; font-weight: normal;">Item</span></th>
-                    <th style="width: 42%; padding: 5px;">รายการ<br><span style="font-size: 10px; font-weight: normal;">Description</span></th>
-                    <th style="width: 10%; padding: 5px;">จำนวน<br><span style="font-size: 10px; font-weight: normal;">Qty</span></th>
-                    <th style="width: 10%; padding: 5px;">หน่วย<br><span style="font-size: 10px; font-weight: normal;">Unit</span></th>
-                    <th style="width: 15%; padding: 5px;">ราคา/หน่วย<br><span style="font-size: 10px; font-weight: normal;">Price/Unit</span></th>
-                    <th style="width: 15%; padding: 5px;">จำนวนเงิน<br><span style="font-size: 10px; font-weight: normal;">Amount</span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="height: 28px; text-align: center;">
-                    <td>1</td>
-                    <td style="padding: 2px 8px; text-align: left;">{item_desc}</td>
-                    <td>{item_qty}</td>
-                    <td>{item_unit}</td>
-                    <td style="padding: 2px 8px; text-align: right;">{formatted_price}</td>
-                    <td style="padding: 2px 8px; text-align: right;">{formatted_amount}</td>
-                </tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 26px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="font-weight: bold;">
-                    <td colspan="3" style="padding: 6px 8px; text-align: left;">{text_baht}</td>
-                    <td colspan="2" style="padding: 6px; text-align: center;">ยอดสุทธิ</td>
-                    <td style="padding: 6px 8px; text-align: right;">{formatted_amount}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="margin-top: 10px; font-size: 12px; line-height: 1.8;">
-            <div><b>ชำระโดย :</b></div>
-            <div>{chk_cash} เงินสด ................................................................................................บาท</div>
-            <div>{chk_transfer} เงินโอน ................................................................................................บาท</div>
-            <div>{chk_cheque} เช็ค &nbsp; ธนาคาร........................................สาขา...........................................................................................</div>
-        </div>
-
-        <table class="border-table" style="margin-top: 15px; text-align: center; font-size: 12px;">
-            <tr>
-                <td style="width: 33%; padding: 8px; vertical-align: top;">
-                    <div>ผู้รับเงิน</div><br><br><br>
-                    <div>วันที่................................................</div>
-                </td>
-                <td style="width: 33%; padding: 8px; vertical-align: top;">
-                    <div>ผู้รับใบเสร็จ</div><br><br><br>
-                    <div>วันที่................................................</div>
-                </td>
-                <td style="width: 34%; padding: 8px; vertical-align: top;">
-                    <div>ในนามบริษัท เอ แอนด์ เค ทรานสปอร์ต จำกัด</div><br><br><br>
-                    <div>ประทับตราบริษัท</div>
-                </td>
-            </tr>
-        </table>
     </div>
 
-    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์ใบเสร็จรับเงิน / Save PDF</button>
+    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์ใบเสร็จรับเงิน / Save PDF (A4)</button>
 
     </body>
     </html>
     """
-    components.html(full_html, height=920, scrolling=True)
+    components.html(full_html, height=1200, scrolling=True)
